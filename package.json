@@ -1,0 +1,43 @@
+{
+  "name": "crawlcove-export",
+  "version": "1.0.0",
+  "description": "Load, query and convert Crawl Cove SEO crawl exports (JSON or CSV) in JavaScript/TypeScript: typed pages, issues by type, status filters, CSV round-trip.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "seo",
+    "crawl",
+    "crawl-export",
+    "site-audit",
+    "typescript",
+    "crawl-cove"
+  ],
+  "author": "Crawl Cove",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CrawlCove/crawlcove-js.git"
+  },
+  "homepage": "https://crawlcove.com/?utm_source=github&utm_medium=crawlcove-js",
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  }
+}
