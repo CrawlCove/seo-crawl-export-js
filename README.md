@@ -65,6 +65,8 @@ Title, meta and H1 rules are skipped on non-200 pages, so an error page is one `
 
 Exports come from [Crawl Cove](https://crawlcove.com/?utm_source=github&utm_medium=crawlcove-js), the desktop SEO crawler for Windows and Mac: Reports → Export JSON or CSV. A Screaming Frog export can be converted first with [crawlcove-sf-import](https://github.com/CrawlCove/crawlcove-sf-import).
 
+This repo has its own page on crawlcove.com: [Crawl Cove JavaScript library](https://crawlcove.com/open-source/crawlcove-js?utm_source=github&utm_medium=crawlcove-js).
+
 ## Related tools
 
 - [crawlcove-export-spec](https://github.com/CrawlCove/crawlcove-export-spec) — the JSON Schema and CSV column reference this library implements.
