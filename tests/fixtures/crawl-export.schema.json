@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/CrawlCove/crawlcove-export-spec/main/schema/crawl-export.schema.json",
+  "$id": "https://raw.githubusercontent.com/CrawlCove/seo-crawl-export-spec/main/schema/crawl-export.schema.json",
   "title": "Crawl Cove crawl export",
   "description": "The full-crawl JSON export produced by the Crawl Cove desktop app's Reports page (one audit run, every crawled page). See ../docs/versioning.md for how schemaVersion changes.",
   "type": "object",

@@ -30,9 +30,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CrawlCove/crawlcove-js.git"
+    "url": "https://github.com/CrawlCove/seo-crawl-export-js.git"
   },
-  "homepage": "https://crawlcove.com/?utm_source=github&utm_medium=crawlcove-js",
+  "homepage": "https://crawlcove.com/?utm_source=github&utm_medium=seo-crawl-export-js",
   "devDependencies": {
     "@types/node": "^26.6.3",
     "ajv": "^8.20.0",
