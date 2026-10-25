@@ -80,6 +80,7 @@ This repo has its own page on crawlcove.com: [Crawl Cove JavaScript library](htt
 - [crawlcove-sitemap-validator](https://github.com/CrawlCove/xml-sitemap-validator) — validate an XML sitemap or sitemap index.
 - [crawlcove-robots-txt-tester](https://github.com/CrawlCove/robots-txt-tester) — lint a robots.txt and test which URLs each crawler may fetch.
 - [crawlcove-redirect-chain-checker](https://github.com/CrawlCove/redirect-chain-checker) — follow every hop of a URL's redirects.
+- [seo-chrome-extension](https://github.com/CrawlCove/seo-chrome-extension) — Chrome extension: on-page SEO check of the current tab plus AI answer visibility (which AI crawlers may read it, snippet blocks, llms.txt, extractability score).
 
 ## License
 
