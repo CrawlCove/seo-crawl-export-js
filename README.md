@@ -1,3 +1,5 @@
+<a href="https://crawlcove.com/download?utm_source=github&utm_medium=readme&utm_campaign=seo-crawl-export-js"><img src="https://raw.githubusercontent.com/CrawlCove/.github/main/banners/seo-crawl-export-js.svg" width="1200" alt="seo-crawl-export-js: Load, query and convert site crawl data in JavaScript and TypeScript, with typed pages, issues by type and status filters." /></a>
+
 # crawlcove-export (crawlcove-js)
 
 Load, query and convert [Crawl Cove](https://crawlcove.com/?utm_source=github&utm_medium=seo-crawl-export-js) SEO crawl exports in JavaScript or TypeScript. Zero dependencies, fully typed, browser-safe. Reads the JSON export ([crawlcove-export-spec](https://github.com/CrawlCove/seo-crawl-export-spec) 1.0.0) and the desktop app's CSV export, writes CSV back, and answers the questions you'd otherwise write a loop for: which pages are broken, which titles are duplicated, how many issues of each type, what does depth 0–2 look like.
