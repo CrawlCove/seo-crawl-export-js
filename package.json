@@ -1,6 +1,6 @@
 {
   "name": "crawlcove-export",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Load, query and convert Crawl Cove SEO crawl exports (JSON or CSV) in JavaScript/TypeScript: typed pages, issues by type, status filters, CSV round-trip.",
   "type": "module",
   "main": "dist/index.js",

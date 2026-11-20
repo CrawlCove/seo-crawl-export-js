@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0, 2026-11-20
+
+- `duplicate-title` (and `duplicateTitles()`) only compare pages that compete in
+  search: a 200 page that did not redirect, is not noindex and does not
+  canonicalise to another URL. A `?sort=` variant whose canonical is the
+  category, a noindex copy or `/blog` redirecting to `/blog/` no longer reads
+  as a duplicate. New exports `competesInSearch()` and `canonicalizesElsewhere()`.
+  Same rule as seo-mcp-server 1.1.0 and seo-audit-google-sheets 1.1.0, so the
+  three still agree.
+
 ## 1.0.0 — 2026-09-29
 
 Initial release.

@@ -205,11 +205,36 @@ function isNoindex(p: ExportPage): boolean {
   return /\bnoindex\b/i.test(p.robotsMeta ?? '') || /\bnoindex\b/i.test(p.xRobotsTag ?? '')
 }
 
-/** Issues for every page, in ISSUE_TYPES order per page. Same rules as crawlcove-mcp / crawlcove-sheets. */
+/** True when the page's canonical names a different URL (a `?sort=` variant, a print view). */
+export function canonicalizesElsewhere(p: ExportPage): boolean {
+  if (!p.canonical) return false
+  const norm = (u: string, base?: string): string => {
+    try {
+      const x = new URL(u, base)
+      x.hash = ''
+      return x.href
+    } catch {
+      return u
+    }
+  }
+  const target = norm(p.canonical, p.finalUrl || p.url)
+  return target !== norm(p.url) && target !== norm(p.finalUrl || p.url)
+}
+
+/**
+ * Pages that compete in search, the only ones whose shared title is a duplicate:
+ * a 200 HTML page that did not redirect, is not noindex and does not canonicalise
+ * to another URL. Same rule as seo-mcp-server 1.1.0 and seo-audit-google-sheets 1.1.0.
+ */
+export function competesInSearch(p: ExportPage): boolean {
+  return p.statusCode === 200 && !p.fetchError && p.redirectHops === 0 && !isNoindex(p) && !canonicalizesElsewhere(p)
+}
+
+/** Issues for every page, in ISSUE_TYPES order per page. Same rules as seo-mcp-server / seo-audit-google-sheets. */
 export function issuesOf(pages: ExportPage[], types?: readonly IssueType[]): Issue[] {
   const want = types ? new Set(types) : null
   const titleCounts = new Map<string, number>()
-  for (const p of pages) if (p.title) titleCounts.set(p.title, (titleCounts.get(p.title) ?? 0) + 1)
+  for (const p of pages) if (p.title && competesInSearch(p)) titleCounts.set(p.title, (titleCounts.get(p.title) ?? 0) + 1)
   const out: Issue[] = []
   const push = (i: Issue): void => { if (want === null || want.has(i.type)) out.push(i) }
   for (const p of pages) {
@@ -221,7 +246,7 @@ export function issuesOf(pages: ExportPage[], types?: readonly IssueType[]): Iss
     else {
       const tl = p.titleLength ?? p.title.length
       if (tl > TITLE_MAX) push({ type: 'long-title', url: p.url, detail: `${tl} chars: "${p.title}"` })
-      if ((titleCounts.get(p.title) ?? 0) > 1) push({ type: 'duplicate-title', url: p.url, detail: `"${p.title}" is used on ${titleCounts.get(p.title)} pages` })
+      if (competesInSearch(p) && (titleCounts.get(p.title) ?? 0) > 1) push({ type: 'duplicate-title', url: p.url, detail: `"${p.title}" is used on ${titleCounts.get(p.title)} pages` })
     }
     if (!p.metaDescription || p.metaDescription.trim() === '') push({ type: 'missing-meta-description', url: p.url, detail: 'no meta description' })
     else if ((p.metaLength ?? p.metaDescription.length) > META_MAX) push({ type: 'long-meta-description', url: p.url, detail: `${p.metaLength ?? p.metaDescription.length} chars` })
@@ -296,7 +321,7 @@ export class Crawl {
 
   duplicateTitles(): Map<string, ExportPage[]> {
     const m = new Map<string, ExportPage[]>()
-    for (const p of this.data.pages) if (p.title && p.statusCode === 200) m.set(p.title, [...(m.get(p.title) ?? []), p])
+    for (const p of this.data.pages) if (p.title && competesInSearch(p)) m.set(p.title, [...(m.get(p.title) ?? []), p])
     for (const [k, v] of m) if (v.length < 2) m.delete(k)
     return m
   }

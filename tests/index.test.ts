@@ -53,7 +53,14 @@ describe('issuesOf (same rules as crawlcove-mcp)', () => {
     expect(types([page({ statusCode: null, fetchError: 'ETIMEDOUT' })])).toEqual(['broken-page'])
     expect(types([page({ title: '' })])).toEqual(['missing-title'])
     expect(types([page({ title: 'x'.repeat(61) })])).toEqual(['long-title'])
-    expect(types([page({ url: 'https://a.test/1' }), page({ url: 'https://a.test/2' })])).toEqual(['duplicate-title', 'duplicate-title'])
+    expect(types([page({ url: 'https://a.test/1', canonical: 'https://a.test/1' }), page({ url: 'https://a.test/2', canonical: 'https://a.test/2' })])).toEqual(['duplicate-title', 'duplicate-title'])
+    // a canonicalised variant, a noindex copy and a redirected URL compete with nothing
+    expect(types([
+      page({ url: 'https://a.test/shop/', canonical: 'https://a.test/shop/' }),
+      page({ url: 'https://a.test/shop/?sort=price', canonical: '/shop/' }),
+      page({ url: 'https://a.test/old-shop', canonical: 'https://a.test/old-shop', robotsMeta: 'noindex', indexable: false }),
+      page({ url: 'https://a.test/shop', finalUrl: 'https://a.test/shop/', redirectHops: 1, canonical: 'https://a.test/shop/' })
+    ])).not.toContain('duplicate-title')
     expect(types([page({ metaDescription: null })])).toEqual(['missing-meta-description'])
     expect(types([page({ metaDescription: 'x'.repeat(161) })])).toEqual(['long-meta-description'])
     expect(types([page({ h1Count: 0 })])).toEqual(['missing-h1'])

@@ -79,7 +79,15 @@ export declare function toCsv(exp: CrawlExport): string;
  * for full JSON Schema validation use crawlcove-export-spec's validator.
  */
 export declare function parseExport(input: string | unknown): CrawlExport;
-/** Issues for every page, in ISSUE_TYPES order per page. Same rules as crawlcove-mcp / crawlcove-sheets. */
+/** True when the page's canonical names a different URL (a `?sort=` variant, a print view). */
+export declare function canonicalizesElsewhere(p: ExportPage): boolean;
+/**
+ * Pages that compete in search, the only ones whose shared title is a duplicate:
+ * a 200 HTML page that did not redirect, is not noindex and does not canonicalise
+ * to another URL. Same rule as seo-mcp-server 1.1.0 and seo-audit-google-sheets 1.1.0.
+ */
+export declare function competesInSearch(p: ExportPage): boolean;
+/** Issues for every page, in ISSUE_TYPES order per page. Same rules as seo-mcp-server / seo-audit-google-sheets. */
 export declare function issuesOf(pages: ExportPage[], types?: readonly IssueType[]): Issue[];
 export declare function filterPages(pages: ExportPage[], f?: PageFilter): ExportPage[];
 export interface Summary {

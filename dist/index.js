@@ -182,12 +182,37 @@ export function parseExport(input) {
 function isNoindex(p) {
     return /\bnoindex\b/i.test(p.robotsMeta ?? '') || /\bnoindex\b/i.test(p.xRobotsTag ?? '');
 }
-/** Issues for every page, in ISSUE_TYPES order per page. Same rules as crawlcove-mcp / crawlcove-sheets. */
+/** True when the page's canonical names a different URL (a `?sort=` variant, a print view). */
+export function canonicalizesElsewhere(p) {
+    if (!p.canonical)
+        return false;
+    const norm = (u, base) => {
+        try {
+            const x = new URL(u, base);
+            x.hash = '';
+            return x.href;
+        }
+        catch {
+            return u;
+        }
+    };
+    const target = norm(p.canonical, p.finalUrl || p.url);
+    return target !== norm(p.url) && target !== norm(p.finalUrl || p.url);
+}
+/**
+ * Pages that compete in search, the only ones whose shared title is a duplicate:
+ * a 200 HTML page that did not redirect, is not noindex and does not canonicalise
+ * to another URL. Same rule as seo-mcp-server 1.1.0 and seo-audit-google-sheets 1.1.0.
+ */
+export function competesInSearch(p) {
+    return p.statusCode === 200 && !p.fetchError && p.redirectHops === 0 && !isNoindex(p) && !canonicalizesElsewhere(p);
+}
+/** Issues for every page, in ISSUE_TYPES order per page. Same rules as seo-mcp-server / seo-audit-google-sheets. */
 export function issuesOf(pages, types) {
     const want = types ? new Set(types) : null;
     const titleCounts = new Map();
     for (const p of pages)
-        if (p.title)
+        if (p.title && competesInSearch(p))
             titleCounts.set(p.title, (titleCounts.get(p.title) ?? 0) + 1);
     const out = [];
     const push = (i) => { if (want === null || want.has(i.type))
@@ -206,7 +231,7 @@ export function issuesOf(pages, types) {
             const tl = p.titleLength ?? p.title.length;
             if (tl > TITLE_MAX)
                 push({ type: 'long-title', url: p.url, detail: `${tl} chars: "${p.title}"` });
-            if ((titleCounts.get(p.title) ?? 0) > 1)
+            if (competesInSearch(p) && (titleCounts.get(p.title) ?? 0) > 1)
                 push({ type: 'duplicate-title', url: p.url, detail: `"${p.title}" is used on ${titleCounts.get(p.title)} pages` });
         }
         if (!p.metaDescription || p.metaDescription.trim() === '')
@@ -269,7 +294,7 @@ export class Crawl {
     duplicateTitles() {
         const m = new Map();
         for (const p of this.data.pages)
-            if (p.title && p.statusCode === 200)
+            if (p.title && competesInSearch(p))
                 m.set(p.title, [...(m.get(p.title) ?? []), p]);
         for (const [k, v] of m)
             if (v.length < 2)
